@@ -1,0 +1,288 @@
+%%manim -v WARNING -qh Matrix_Eq_and_Iteration
+
+class Matrix_Eq_and_Iteration(Scene): 
+    
+    def construct(self): 
+        ### VERTICES
+        fill_dot1 = Dot(color=BLACK)
+        team1 = Circle(radius=0.3, color=RED, fill_opacity=1)
+        fill_dot2 = Dot(color=BLACK)
+        team2 = Circle(radius=0.3, color=BLUE, fill_opacity=1)
+        fill_dot3 = Dot(color=BLACK)
+        team3 = Circle(radius=0.3, color=GREEN, fill_opacity=1)
+        fill_dot4 = Dot(color=BLACK)
+        team4 = Circle(radius=0.3, color=YELLOW, fill_opacity=1)
+        fill_dot5 = Dot(color=BLACK)
+
+        vertices = Group(fill_dot1, team1, fill_dot5, team4, 
+                         fill_dot3, team2, fill_dot4, team3, 
+                         fill_dot5).arrange_in_grid(buff=1.5)
+        vertices.shift(RIGHT*4)
+        #self.add(vertices)
+        
+        one = team1.get_center()
+        two = team2.get_center()
+        three = team3.get_center()
+        four = team4.get_center()
+        
+        #labels
+        teamA_label = Text("A", color = BLACK, font_size=36).next_to(one, RIGHT*0)
+        teamB_label = Text("B", color = BLACK, font_size=36).next_to(two, RIGHT*0)
+        teamC_label = Text("C", color = BLACK, font_size=36).next_to(three, RIGHT*0)
+        teamD_label = Text("D", color = BLACK, font_size=36).next_to(four, RIGHT*0)
+        graphlabels = Group(teamA_label, teamB_label, teamC_label, teamD_label)
+        #self.add(labels)
+        
+        ### EDGES
+        game1 = Arrow(start=one, end=two, buff=0.3, max_tip_length_to_length_ratio=0.10)
+        game2 = Arrow(start=one, end=three, buff=0.3, max_tip_length_to_length_ratio=0.07)
+        game3 = Arrow(start=one, end=four, buff=0.3, max_tip_length_to_length_ratio=0.10)
+        game4 = Arrow(start=two, end=three, buff=0.3, max_tip_length_to_length_ratio=0.10)
+        game5 = Arrow(start=two, end=four, buff=0.3, max_tip_length_to_length_ratio=0.07)
+        game6 = Arrow(start=three, end=four, buff=0.3, max_tip_length_to_length_ratio=0.10)
+        edges = Group(game1, game2, game3, game4, game5, game6)
+        
+        game1_label = Text("2", font_size = 30).next_to(game1,RIGHT*0)
+        game1_label.shift(RIGHT*0.4)
+        game1_label.shift(UP*0.4)
+        
+        game2_label = Text("4", font_size = 30).next_to(game2,UP*0)
+        game2_label.shift(RIGHT*0.3)
+        game2_label.shift(UP*0.8)
+        
+        game3_label = Text("6", font_size = 30).next_to(game3,LEFT*0)
+        game3_label.shift(LEFT*0.4)
+        game3_label.shift(UP*0.4)
+        
+        game4_label = Text("8", font_size = 30).next_to(game4,RIGHT*0)
+        game4_label.shift(RIGHT*0.4)
+        game4_label.shift(DOWN*0.4)
+        
+        game5_label = Text("10", font_size = 30).next_to(game5,LEFT*0)
+        game5_label.shift(UP*0.3)
+        game5_label.shift(LEFT*0.6)
+        
+        game6_label = Text("12", font_size = 30).next_to(game6,LEFT*0)
+        game6_label.shift(LEFT*0.4)
+        game6_label.shift(DOWN*0.4)
+        
+        edgeLabels = Group(game1_label, game2_label, game3_label, game4_label, game5_label, game6_label)
+        #self.add(edges)
+        
+        A = Matrix([[1,-1,0,0], [1,0,-1,0], [1,0,0,-1], [0,1,-1,0], [0,1,0,-1], [0,0,1,-1]])
+        x = Matrix([['A'], ['B'], ['C'], ['D']])
+        b = Matrix([[2], [4], [6], [8], [10], [12]])
+        A.scale(0.8)
+        x.scale(0.8)
+        b.scale(0.8)
+        equals = Text('=')
+        #x.shift(LEFT)
+        A.next_to(x,LEFT)
+        equals.next_to(x)
+        b.next_to(equals)
+        MatEq = Group(x,A,b,equals)
+        
+        team_labels = Text("A      B      C      D", t2c={'[:1]': '#ff4d4d', '[1:2]': "#0062cc", 
+                                                          '[2:3]': "#339933", '[3:4]': "#ffff33"}).scale(0.75)
+        team_labels.next_to(A, UP*1.5)
+        game_labels = Text("game 1 \ngame 2 \ngame 3 \ngame 4 \ngame 5 \ngame 6", line_spacing = 1.6,
+                          color = GREY).scale(0.5)
+        game_labels.next_to(A,LEFT)
+        labels = Group(team_labels, game_labels)
+        
+        key = Text(" 1: win \n-1: loss\n 0: didn't play", line_spacing = 1.2).scale(0.6)
+        key.shift(RIGHT*4.5)
+        
+        t = Text("Team A beat Team B by 2 points", t2c={'[:5]': '#ff4d4d', '[9:14]': "#0062cc"})
+        t2 = Text("Team A beat Team C by 4 points", t2c={'[:5]': '#ff4d4d', '[9:14]': "#339933"})
+        t.shift(DOWN*3)
+        t2.shift(DOWN*3)
+        
+        # KACZMARZ PIECES #######################
+        x_k_plus1 = MathTex(r"x^{(k+1)}")
+        x_k = MathTex(r"x^{(k)}")
+        x_k2 = MathTex(r"x^{(k)}")
+        b_i = MathTex(r"b_i")
+        b_2 = MathTex(r"2").set_color(YELLOW)
+        A_i = MathTex(r"A^{(i)^\top}")
+        
+        langle = MathTex(r"\bigg \langle")
+        rangle = MathTex(r"\bigg \rangle")
+        
+        A_iT = MathTex(r"A^{(i)^\top}")
+        two_norm = MathTex(r"{\|{A}^{(i)}\|}_2^2")
+        two_norm_2 = MathTex(r"2")
+        fracbar = Line(start=[-2,0,0], end=[2.5,0,0])
+        plus = MathTex("+")
+        comma = MathTex(",")
+        equalsign = MathTex("=")
+        minus = MathTex("-")
+        
+        ## Vectors ##
+        x_vec1 = MathTex(r"\begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \end{bmatrix}")
+        x_vec2 = MathTex(r"\begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \end{bmatrix}")
+        #x_vec3 = MathTex(r"\begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \end{bmatrix}")
+        
+        A_vec1 = MathTex(r"\begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}")
+        A_vec2 = MathTex(r"\begin{bmatrix} 1 & -1 & 0 & 0 \end{bmatrix}")
+        AT_vec = MathTex(r"\begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}")
+        
+        #self.add(vectors1)
+        
+        # KACZMARZ PIECES #######################
+        fracbar.shift(DOWN*2)
+        fracbar.shift(RIGHT*2)
+        
+        plus.next_to(fracbar, LEFT)
+        x_k.next_to(plus,LEFT)
+        x_vec2.next_to(plus,LEFT)
+        equalsign.next_to(x_k,LEFT)
+        x_k_plus1.next_to(equalsign,LEFT)
+        
+        minus.next_to(fracbar,UP)
+        minus.shift(UP*1.2)
+        minus.shift(LEFT*1.4)
+        langle.next_to(minus, RIGHT)
+        x_vec1.next_to(langle, RIGHT)
+        x_k2.next_to(langle,RIGHT)
+        comma.next_to(x_vec1, RIGHT)
+        A_vec1.next_to(comma, RIGHT)
+        A_i.next_to(comma,RIGHT)
+        rangle.next_to(A_vec1, RIGHT)
+        b_i.next_to(minus,LEFT)
+        b_2.next_to(minus,LEFT)
+        
+        A_iT.next_to(fracbar,RIGHT)
+        AT_vec.next_to(fracbar,RIGHT)
+        two_norm.next_to(fracbar,DOWN)
+        two_norm.shift(DOWN*0.3)
+        two_norm_2.next_to(two_norm, RIGHT*0)
+        kaczmarz = Group(x_k_plus1, x_k, b_i, A_iT, x_k2, A_i, comma, 
+                         rangle, langle, plus, equalsign, minus, fracbar, two_norm)
+        
+        
+        
+        # MATRIX & EQUATION ANIMATION ######################################################################################
+        self.play(FadeIn(MatEq))
+        self.wait()
+        self.play(FadeIn(labels), FadeIn(key))
+        self.wait()
+        self.play(FadeOut(labels), FadeOut(key))
+        self.wait()
+        self.play(MatEq.animate.shift(LEFT*2))
+        self.play(FadeIn(vertices),FadeIn(graphlabels))
+        
+        
+        ##GAME 1
+        self.play(A.animate.set_row_colors(YELLOW,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY), 
+                  b.animate.set_row_colors(YELLOW,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY),
+                  Write(t))
+        self.wait()
+        self.play(FadeIn(game1), FadeIn(game1_label))
+        self.wait()
+        self.play(FadeOut(t))
+        self.wait()
+        
+        ##GAME 2
+        self.play(A.animate.set_row_colors(DARK_GREY,YELLOW,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY), 
+                  b.animate.set_row_colors(DARK_GREY,YELLOW,DARK_GREY,DARK_GREY,DARK_GREY,DARK_GREY),
+                  Write(t2))
+        self.play(FadeIn(game2), FadeIn(game2_label))
+        self.wait()
+        self.play(A.animate.set_row_colors(WHITE,WHITE,WHITE,WHITE,WHITE,WHITE), 
+                  b.animate.set_row_colors(WHITE,WHITE,WHITE,WHITE,WHITE,WHITE),
+                  FadeIn(game3), FadeIn(game4), FadeIn(game5), FadeIn(game6),
+                  FadeIn(game3_label), FadeIn(game4_label), FadeIn(game5_label), FadeIn(game6_label), run_time = 2)
+        self.wait()
+        
+        self.play(MatEq.animate.scale(0.85), FadeOut(vertices), FadeOut(edges), 
+                  FadeOut(edgeLabels), FadeOut(graphlabels), FadeOut(t2))
+        
+        self.play(MatEq.animate.shift(UP*2 + LEFT*0.8))
+        self.wait()
+        self.play(FadeIn(kaczmarz))
+        
+        
+        #zeros.next_to(A,RIGHT)
+        self.play(x.animate.set_color(YELLOW), x_k.animate.set_color(YELLOW),x_k2.animate.set_color(YELLOW), )
+        zeros = Matrix([['0'], ['0'], ['0'], ['0']], bracket_h_buff=0.33).scale(0.68)
+        zeros.set_color(YELLOW)
+        zeros.next_to(x,RIGHT*0)
+        self.wait()
+        self.play(FadeOut(x), FadeIn(zeros))
+        
+        
+        #replace x
+        x_vec1.set_color(YELLOW)
+        x_vec2.set_color(YELLOW)
+        self.play(FadeOut(x_k2), FadeIn(x_vec1), FadeOut(x_k), FadeIn(x_vec2))
+        self.wait()
+        self.play(zeros.animate.set_color(WHITE), x_vec1.animate.set_color(WHITE), x_vec2.animate.set_color(WHITE))
+        self.wait()
+                  
+        #replace b
+        
+        self.play(b_i.animate.set_color(YELLOW), b.animate.set_row_colors(YELLOW, WHITE, WHITE, WHITE, WHITE, WHITE))
+        self.wait()
+        self.play(FadeOut(b_i), FadeIn(b_2))
+        self.wait()
+        self.play(b.animate.set_color(WHITE), b_2.animate.set_color(WHITE), b.animate.set_row_colors(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE))
+        self.wait()
+        
+        #replace A
+        A_vec1.set_color(YELLOW)
+        AT_vec.set_color(YELLOW)
+        self.play(A_i.animate.set_color(YELLOW), A_iT.animate.set_color(YELLOW), A.animate.set_row_colors(YELLOW, WHITE, WHITE, WHITE, WHITE, WHITE))
+        self.wait()
+        self.play(FadeOut(A_i), FadeIn(A_vec1), FadeOut(A_iT), FadeIn(AT_vec))
+        self.wait()
+        self.play(A_vec1.animate.set_color(WHITE), AT_vec.animate.set_color(WHITE), A.animate.set_row_colors(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE))
+        
+        #replace denominator
+        self.play(two_norm.animate.set_color(YELLOW))
+        self.wait()
+        two_norm_2.set_color(YELLOW)
+        self.play(FadeOut(two_norm), FadeIn(two_norm_2))
+        self.wait()
+        self.play(two_norm_2.animate.set_color(WHITE))
+        
+        #solving equation
+        vec_mult_0 = MathTex(r"0").next_to(minus,RIGHT)
+        self.play(FadeOut(rangle), FadeOut(langle), FadeOut(comma), 
+                  FadeOut(x_vec1), FadeOut(A_vec1), FadeIn(vec_mult_0))
+        self.wait()
+        self.play(b_2.animate.shift(RIGHT*1.3), minus.animate.shift(RIGHT*1.3), vec_mult_0.animate.shift(RIGHT*1.3))
+        self.wait()
+        self.play(b_2.animate.shift(RIGHT*0.6), FadeOut(minus), FadeOut(vec_mult_0))
+        self.wait()
+        self.play(b_2.animate.shift(DOWN), two_norm_2.animate.shift(UP*0.5), 
+                  fracbar.animate.set_length(1), AT_vec.animate.shift(LEFT*1.5))
+        number_1 = MathTex(r"1").next_to(fracbar, RIGHT*0)
+        self.play(FadeOut(b_2), FadeOut(two_norm_2), FadeOut(fracbar), FadeIn(number_1))
+        self.wait()
+        self.play(FadeOut(number_1))
+        self.wait()
+        self.play(AT_vec.animate.next_to(plus))
+        self.wait()
+        self.play(AT_vec.animate.next_to(equalsign), FadeOut(plus), FadeOut(x_vec2))
+        self.wait()
+        self.play(zeros.animate.set_color(YELLOW))
+        new_x_vec = Matrix([['1'], ['-1'], ['0'], ['0']], bracket_h_buff=0.16).scale(0.68)
+        new_x_vec.set_color(YELLOW)
+        new_x_vec.next_to(x,RIGHT*0)
+        self.play(FadeOut(zeros), FadeIn(new_x_vec))
+        
+        new_MatEq = Group(A, new_x_vec, equals, b)
+        self.play(new_MatEq.animate.shift(DOWN*2 + RIGHT*0.8), FadeOut(equalsign), FadeOut(x_k_plus1), FadeOut(AT_vec))
+        self.play(new_MatEq.animate.scale(1.18))
+        
+        
+        #add the A and B nodes
+        self.play(FadeIn(game1), FadeIn(team1), FadeIn(team2), FadeIn(game1_label),FadeIn(teamA_label), FadeIn(teamB_label))
+        teamA_number = Text("1", color = BLACK, font_size=36).next_to(one, RIGHT*0)
+        teamB_number = Text("-1", color = BLACK, font_size=36).next_to(two, RIGHT*0)
+        self.play(FadeOut(teamA_label), FadeOut(teamB_label), FadeIn(teamA_number), FadeIn(teamB_number))
+        self.wait()
+        self.play(FadeOut(A), FadeOut(teamA_number), FadeOut(teamB_number), FadeOut(team1), FadeOut(team2), 
+                  FadeOut(game1), FadeOut(game1_label), FadeOut(new_MatEq))
+        
