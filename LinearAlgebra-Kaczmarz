@@ -1,0 +1,169 @@
+%%manim -v WARNING -qh LinearAlgebra
+
+class LinearAlgebra(Scene):
+    
+    def construct(self):
+        
+    # TITLE 
+        linalg = Text("Introduction to Linear Algebra").scale(0.75)
+        linalg.shift(UP*3)
+        
+    # SOLUTION OPTIONS TEXT 
+        solving = Text("Solution options:\nGaussian Elimination \n\nQR Factorization \n\nKaczmarz Method")
+        solving[16:].scale(0.75)
+        solving.shift(RIGHT*3)
+        
+    # AXIS AND LINES 
+        ax = NumberPlane(x_range=[-1, 7], y_range=[-1, 4], background_line_style={"stroke_opacity": 0.4})
+        line1 = Line( [-2,-2.5,0], [0.5,2.5,0])
+        line2 = Line( [-4,-2,0], [4,2,0])
+        line3 = Line( [-3,2.5,0], [4,-1,0])
+        o = Dot([0,0.5,0.], radius=0.1).set_color(YELLOW)
+        q = Dot([-1,-0.5,0], radius=0.1).set_color(YELLOW)
+        graph = Group(line1,line2,line3,q,ax,o)
+        graph.shift(RIGHT*3)
+        graph.scale(0.8)
+        
+    # LINEAR EQUATIONS 
+        eq1 = MathTex("2x - y = 3")
+        eq2 = MathTex("x - 2y = 0")
+        eq3 = MathTex("x + 2y = 8")
+        soln = MathTex("Solution: (2, 1)", color = YELLOW).scale(0.8)
+        eqns = Group(eq1, eq2).arrange(DOWN)
+        eqns.shift(LEFT*4)
+        eqns.shift(UP*2)
+        soln.next_to(eqns, DOWN)
+        eq3.next_to(eqns, DOWN)
+        
+    # MATRIX EQUATION (2 EQ) 
+        A = Matrix([[2,-1], [1,-2]])
+        x = Matrix([['x'], ['y']])
+        b = Matrix([[3], [0]])
+        equals = Text('=')
+        x.shift(DOWN)
+        x.shift(RIGHT * 0.5)
+        A.next_to(x,LEFT)
+        equals.next_to(x)
+        b.next_to(equals)
+        mateq = Group(A,x,b,equals).shift(LEFT*4)
+        #mateq.shift(UP*0.7)
+        mateq.scale(0.8)
+        e0 = MathTex(r"=").next_to(mateq, UP)
+        x0 = MathTex(r"x").next_to(e0, LEFT)
+        A0 = MathTex(r"A").next_to(x0, LEFT)
+        b0 = MathTex(r"b").next_to(e0, RIGHT)
+        Ax_b = Group(e0, A0, x0, b0)
+    # SOLUTION VECTOR
+        x_soln = Matrix([['x'], ['y']])
+        soln_matrix = Matrix([['2'], ['1']])
+        question = Matrix([['?'], ['?']]).set_color(YELLOW)
+        equals2 = Text('=')
+        x_soln.next_to(equals2,LEFT)
+        soln_matrix.next_to(equals2,RIGHT)
+        soln_eq = Group(x_soln, soln_matrix, equals2).scale(0.8)
+        soln_eq.next_to(mateq, DOWN)
+        soln_eq.set_color(YELLOW)
+        
+    # MATRIX EQUATION (3 EQ) 
+        A3 = Matrix([[2,-1], [1,-2], [1,2]])
+        x3 = Matrix([['x'], ['y']])
+        b3 = Matrix([[3], [0], [8]])
+        equals3 = Text('=')
+        x3.shift(DOWN)
+        x3.shift(RIGHT * 0.5)
+        A3.next_to(x3,LEFT)
+        equals3.next_to(x3)
+        b3.next_to(equals3)
+        mateq3 = Group(A3,x3,b3,equals3).shift(LEFT*4)
+        mateq3.shift(UP*0.2)
+        mateq3.scale(0.8)
+        soln_eq.next_to(mateq3,DOWN*1.3)
+        question.next_to(equals2,RIGHT)
+    
+    # PICTURES
+        ori = [0,3,0]
+        origin = Dot(ori)
+        kz_pic = ImageMobject("stefan_kz.jpeg").scale(1.8)
+        CT_pic = ImageMobject("CT_pic.jpeg").next_to(kz_pic, LEFT*0.4)
+        CT_pic.scale(0.6)
+        sig_proc_pic = ImageMobject("sig_proc_pic.jpeg").next_to(kz_pic, RIGHT*0.3)
+        sig_proc_pic.scale(0.6)
+        kz_pic.next_to(origin, DOWN*4)
+        stefan = Text("Stefan Kaczmarz", font_size = 36).next_to(kz_pic,DOWN)
+        CT = Text("Computed Tomography", font_size = 32).next_to(CT_pic,DOWN)
+        ct = Text("(CT)", font_size = 32).next_to(CT,DOWN)
+        sig = Text("Signal Processing", font_size = 32).next_to(sig_proc_pic, DOWN)
+        
+    # SCARCE & OVERDETERMNIED
+        sc = Text("Scarce").next_to([-3,2,0], DOWN*0)
+        od = Text("Overdetermined").next_to([3,2,0], DOWN*0)
+        scarce = MathTex(r"\begin{bmatrix}0 & 0 & 3 & 0 & 1 \\ 2 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 7 \\ 0 & 0 & 0 & 0 & 0 \end{bmatrix}").next_to([-3,-1,0], RIGHT*0)
+        overdet = MathTex(r"\begin{bmatrix}1 & 2 \\ 1 & 8 \\ 3 & 3 \\ 0 & 6 \\ 4 & 7 \\ 3 & 8 \\ 2 & 3\end{bmatrix}").next_to([3,-1,0], DOWN*0)
+        
+# ANIMATION ##############################################################################################
+
+    # SCENE 1 (graph and two linear equations) 
+        self.play(Write(linalg))             # title
+        self.wait()
+        self.play(Create(ax))                # axis & grid
+        self.wait()
+        self.play(Create(line1), Create(line2), FadeIn(eqns))     # first two lines and equations
+        self.wait()
+        self.play(FadeIn(q))                 # intersection point
+        self.wait()
+        self.play(FadeIn(soln))              # (2,1)
+        self.wait()
+        self.play(FadeIn(mateq), FadeIn(Ax_b))             # first matrix equation
+        self.wait()
+        self.play(A.animate.set_color(RED_C), A0.animate.set_color(RED_C))
+        self.wait()
+        self.play(x.animate.set_color(GREEN_C), x0.animate.set_color(GREEN_C))
+        self.wait()
+        self.play(b.animate.set_color(BLUE_D), b0.animate.set_color(BLUE_D))
+        self.wait()
+        self.play(b.animate.set_color(WHITE), b0.animate.set_color(WHITE), 
+                  A.animate.set_color(WHITE), A0.animate.set_color(WHITE), 
+                  x.animate.set_color(WHITE), x0.animate.set_color(WHITE))
+        self.wait()
+        self.play(FadeIn(soln_eq))           # solution vector
+        
+    # SCENE 2 (third linear equation) 
+        self.play(FadeOut(soln), FadeOut(mateq), FadeOut(Ax_b), FadeOut(soln_eq), FadeOut(q))   # clear solution
+        self.wait()
+        self.play(FadeIn(eq3), FadeIn(line3), FadeIn(mateq3))                    # third line and equation
+        self.wait()
+        
+        
+        self.play(FadeIn(o), FadeIn(x_soln), FadeIn(equals2), FadeIn(question))  # solution aprox & ? vector
+        self.wait()
+        self.play(FadeOut(line1), FadeOut(line2),FadeOut(line3),FadeOut(o),FadeOut(ax))  # clear graph
+    
+    # SCENE 3 (solution options)
+        self.wait()
+        self.play(Write(solving[0:50]))
+        self.wait()
+        self.play(Write(solving[50:]))
+        self.wait()
+        
+    # SCENE 4 (intro to kaczmarz)
+        self.play(solving[50:].animate.next_to(origin, RIGHT*0), FadeOut(solving[0:50]), 
+                  FadeOut(linalg), FadeOut(eq1), FadeOut(eq2), FadeOut(eq3), FadeOut(mateq3), 
+                  FadeOut(x_soln), FadeOut(equals2), FadeOut(question))
+        self.play(solving[50:].animate.scale(2))
+            
+        # PICTURE SEQUENCE 
+        self.play(FadeIn(kz_pic), FadeIn(stefan))
+        self.wait()
+        self.play(FadeIn(CT_pic), FadeIn(CT), FadeIn(ct), FadeIn(sig_proc_pic), FadeIn(sig))
+        self.wait()
+        self.play(FadeOut(kz_pic), FadeOut(stefan), FadeOut(CT_pic), 
+                      FadeOut(CT), FadeOut(ct), FadeOut(sig_proc_pic), FadeOut(sig))
+            
+        # SCARCE AND OVERDETERMINED
+        self.play(FadeIn(sc), FadeIn(od))
+        self.play(FadeIn(scarce))
+        self.play(FadeIn(overdet))
+        self.wait()
+        self.play(FadeOut(sc), FadeOut(od), FadeOut(scarce), FadeOut(overdet), FadeOut(solving[50:]))
+        self.wait()
+        
