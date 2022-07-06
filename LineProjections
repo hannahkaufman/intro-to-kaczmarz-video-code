@@ -1,0 +1,104 @@
+%%manim -v WARNING -qh LineProjections
+
+class LineProjections(Scene): 
+    
+      def construct(self): 
+            
+            # POINTS AND LINES #######################################################################
+            x_0 = [0,1,0]
+            x_star = [-5,-2,0]
+            
+            line_2 = Line( [-3,3,0],  [-5.4,-3,0] )
+            line_3 = Line( [0,3,0],   [-6,-3,0]   )
+            line_4 = Line( [6,0,0],   [-6,-2.2,0] )
+            line_5 = Line( [-6,-1,0], [-4,-3,0]   )
+            line_6 = Line( [6,1,0],   [-6,-2.3,0] )
+            line_7 = Line( [-6,1,0],  [-4.7,-3,0] )
+            lines = Group(line_2, line_3, line_4, line_5, line_6, line_7)
+            
+            x_1 = line_3.get_projection(x_0)
+            x_2 = line_2.get_projection(x_1)
+            x_3 = line_6.get_projection(x_2)
+            x_4 = line_3.get_projection(x_3)
+            x_5 = line_7.get_projection(x_4)
+            
+            # PROJECTIONS ############################################################################
+            proj_1 = DashedLine(x_0, x_1, color = GREY)                   
+            proj_2 = DashedLine(x_1, x_2, color = GREY)                   
+            proj_3 = DashedLine(x_2, x_3, color = GREY)                  
+            proj_4 = DashedLine(x_3, x_4, color = GREY)                   
+            proj_5 = DashedLine(x_4, x_5, color = GREY)   
+            projections = Group(proj_1, proj_2, proj_3, proj_4, proj_5)   
+    
+            Rangle1 = RightAngle(proj_1, line_3, length=0.2, color = GREY, quadrant = (-1, 1))
+            Rangle2 = RightAngle(proj_2, line_2, length=0.2, color = GREY, quadrant = (-1, 1))
+            Rangle3 = RightAngle(proj_3, line_6, length=0.2, color = GREY, quadrant = (-1, 1))
+            Rangle4 = RightAngle(proj_4, line_3, length=0.2, color = GREY, quadrant = (-1, 1))
+            Rangle5 = RightAngle(proj_5, line_7, length=0.2, color = GREY, quadrant = (-1, 1))
+            rangles = Group(Rangle1,Rangle2,Rangle3,Rangle4,Rangle5)
+            
+            # LABELS AND DOTS ########################################################################
+            star_lab = MathTex("x^*")
+            x_0_lab  = MathTex("x^{(0)}")
+            x_1_lab  = MathTex("x^{(1)}")
+            x_2_lab  = MathTex("x^{(2)}")
+            x_3_lab  = MathTex("x^{(3)}")
+            x_4_lab  = MathTex("x^{(4)}")
+            x_5_lab  = MathTex("x^{(5)}")
+            
+            d_star = Dot(x_star, radius=0.1)
+            d_0 = Dot(x_0, radius=0.1)
+            d_1 = Dot(x_1, radius=0.1)
+            d_2 = Dot(x_2, radius=0.1)
+            d_3 = Dot(x_3, radius=0.1)
+            d_4 = Dot(x_4, radius=0.1)
+            d_5 = Dot(x_5, radius=0.1)
+            
+            star_lab.next_to(d_star,LEFT,buff=0.4)
+            star_lab.shift(UP*0.2)
+            x_0_lab.next_to(d_0,RIGHT,buff=0.15)
+            x_1_lab.next_to(d_1,RIGHT,buff=0.14)
+            x_1_lab.shift(UP*.2)
+            x_2_lab.next_to(d_2,UP,buff=0.12)
+            x_3_lab.next_to(d_3,UR,buff=0.08)
+            x_3_lab.shift(LEFT*.1)
+            x_4_lab.next_to(d_4,UP,buff=0.12)
+            x_4_lab.shift(LEFT*.2)
+            x_5_lab.next_to(d_5,UR,buff=0.08)
+            x_5_lab.shift(LEFT*.1)
+            dot_labels = Group(x_0_lab, x_1_lab, x_2_lab, x_3_lab, x_4_lab, x_5_lab, star_lab) 
+            dots = Group(d_star, d_0, d_1, d_2, d_3, d_4, d_5, )
+            
+            # LINE PROJECTION ANIMATION ##############################################################
+            self.play(Create(line_2),Create(line_3),Create(line_4),
+                      Create(line_5),Create(line_6),Create(line_7))
+            self.wait()
+            self.play(Create(d_star), Write(star_lab))
+            self.play(Create(d_0), Write(x_0_lab))
+            self.wait()
+            self.play(Create(proj_1))
+            self.play(Create(Rangle1))
+            self.play(Create(d_1), Write(x_1_lab))
+            self.wait()
+            self.play(Create(proj_2))
+            self.play(Create(Rangle2))
+            self.play(Create(d_2), Write(x_2_lab))
+            self.wait()
+            self.play(Create(proj_3))
+            self.play(Create(Rangle3))
+            self.play(Create(d_3), Write(x_3_lab))
+            self.wait()
+            self.play(Create(proj_4))
+            self.play(Create(Rangle4))
+            self.play(Create(d_4), Write(x_4_lab))
+            self.wait()
+            self.play(Create(proj_5))
+            self.play(Create(Rangle5))
+            self.play(Create(d_5), Write(x_5_lab))
+            
+            self.wait()
+            
+            self.play(FadeOut(lines),  FadeOut(projections),
+                      FadeOut(dot_labels), FadeOut(dots), FadeOut(rangles))
+            
+            self.wait()
