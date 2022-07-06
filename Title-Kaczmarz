@@ -1,0 +1,10 @@
+%%manim -v WARNING -qh Title
+
+class Title(Scene):
+    def construct(self):
+        line = Line([0,0,0],[0,2,0])
+        title = Text("Kaczmarz Method").scale(2.5)
+        self.play(Write(title))
+        self.wait()
+        self.play(Unwrite(title))
+        self.wait()
