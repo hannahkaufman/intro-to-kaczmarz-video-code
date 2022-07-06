@@ -1,0 +1,10 @@
+%%manim -v WARNING -qh Algorithm
+
+class Algorithm(Scene): 
+    
+    def construct(self): 
+        
+        alg = ImageMobject("algorithm").scale(2)
+        self.play(FadeIn(alg))
+        self.wait()
+        self.play(FadeOut(alg))
